@@ -1,0 +1,35 @@
+{
+  "name": "csm-print",
+  "version": "0.0.1",
+  "description": "Browser-only Vite library for 384-dot csm thermal printers",
+  "repository": {
+    "type": "git",
+    "url": "https://git.csmpro.ru/csmpro/csm-print"
+  },
+  "author": "CyberSport Masters <git@csmpro.ru>",
+  "license": "GPL-3.0-only",
+  "keywords": [
+    "csm-print",
+    "thermal-printer",
+    "receipt-printer",
+    "web-bluetooth",
+    "bluetooth",
+    "browser"
+  ],
+  "type": "module",
+  "main": "./csm-print.js",
+  "module": "./csm-print.js",
+  "exports": {
+    ".": "./csm-print.js"
+  },
+  "files": [
+    "csm-print.js",
+    "README.md"
+  ],
+  "scripts": {
+    "check": "node --check csm-print.js"
+  },
+  "dependencies": {
+    "html-to-image": "^1.11.11"
+  }
+}
