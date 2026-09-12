@@ -24,10 +24,15 @@
   },
   "files": [
     "csm-print.js",
+    "core.js",
+    "printer.js",
+    "image.js",
+    "element.js",
+    "web-bluetooth.js",
     "README.md"
   ],
   "scripts": {
-    "check": "node --check csm-print.js"
+    "check": "node --check csm-print.js && node --check core.js && node --check printer.js && node --check image.js && node --check element.js && node --check web-bluetooth.js && node test/smoke.js"
   },
   "dependencies": {
     "html-to-image": "^1.11.11"
