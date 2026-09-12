@@ -1,7 +1,7 @@
 {
   "name": "csm-print",
   "version": "0.0.1",
-  "description": "Browser-only Vite library for 384-dot csm thermal printers",
+  "description": "Browser-only library for MXW01 384-dot thermal printers",
   "repository": {
     "type": "git",
     "url": "https://git.csmpro.ru/csmpro/csm-print"
@@ -32,7 +32,7 @@
     "README.md"
   ],
   "scripts": {
-    "check": "node --check csm-print.js && node --check core.js && node --check printer.js && node --check image.js && node --check element.js && node --check web-bluetooth.js && node test/smoke.js"
+    "check": "node --check csm-print.js && node --check core.js && node --check printer.js && node --check image.js && node --check element.js && node --check web-bluetooth.js && node test/smoke.js && node --test test/mxw01.test.js"
   },
   "dependencies": {
     "html-to-image": "^1.11.11"
