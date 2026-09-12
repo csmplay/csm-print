@@ -1,6 +1,6 @@
 {
   "name": "csm-print",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Browser-only library for MXW01 384-dot thermal printers",
   "repository": {
     "type": "git",
