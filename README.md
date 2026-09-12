@@ -27,3 +27,20 @@ await printer.printElement(element, {
   pageHeight: 800,
 });
 ```
+
+TypeScript declarations are included in the package:
+
+```ts
+import Printer, { type ImageDataLike } from "csm-print";
+
+const printer = new Printer();
+await printer.connect();
+
+const bitmap: ImageDataLike = {
+  width: 384,
+  height: 100,
+  data: new Uint8ClampedArray(384 * 100 * 4).fill(255),
+};
+await printer.printBitmap(bitmap);
+await printer.disconnect();
+```

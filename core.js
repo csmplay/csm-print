@@ -1,4 +1,4 @@
-export const DEFAULTS = {
+export const DEFAULTS = Object.freeze({
   width: 384,
   threshold: 160,
   chunkSize: 480,
@@ -9,7 +9,7 @@ export const DEFAULTS = {
   responseTimeout: 5000,
   completionTimeout: 20000,
   minimumDataRows: 90,
-};
+});
 
 export const Command = Object.freeze({
   GetStatus: 0xa1,

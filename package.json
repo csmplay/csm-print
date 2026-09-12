@@ -19,11 +19,17 @@
   "type": "module",
   "main": "./csm-print.js",
   "module": "./csm-print.js",
+  "types": "./csm-print.d.ts",
   "exports": {
-    ".": "./csm-print.js"
+    ".": {
+      "types": "./csm-print.d.ts",
+      "import": "./csm-print.js",
+      "default": "./csm-print.js"
+    }
   },
   "files": [
     "csm-print.js",
+    "csm-print.d.ts",
     "core.js",
     "printer.js",
     "image.js",
@@ -32,9 +38,12 @@
     "README.md"
   ],
   "scripts": {
-    "check": "node --check csm-print.js && node --check core.js && node --check printer.js && node --check image.js && node --check element.js && node --check web-bluetooth.js && node test/smoke.js && node --test test/mxw01.test.js"
+    "check": "node --check csm-print.js && node --check core.js && node --check printer.js && node --check image.js && node --check element.js && node --check web-bluetooth.js && node test/smoke.js && node --test test/mxw01.test.js && tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 --lib ES2022,DOM test/types.ts"
   },
   "dependencies": {
     "html-to-image": "^1.11.11"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
   }
 }
