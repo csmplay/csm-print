@@ -10,13 +10,28 @@ export class WebBluetoothTransport {
   constructor() {
     this.notificationQueue = [];
     this.notificationWaiters = [];
+    this.handleNotification = (event) => {
+      const value = event.target.value;
+      const bytes = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+      const notification = parseNotification(bytes);
+      if (notification) this.dispatchNotification(notification);
+      this.onNotification?.(bytes);
+    };
+    this.handleDisconnect = (event) => {
+      if (event.target === this.device && !this.device.gatt.connected) this.clearConnection();
+    };
   }
 
   async connect() {
-    if (!globalThis.navigator?.bluetooth) throw new Error("Web Bluetooth is unavailable");
-    this.device = await navigator.bluetooth.requestDevice({
-      filters: SERVICE_UUIDS.map((uuid) => ({ services: [uuid] })), optionalServices: SERVICE_UUIDS,
-    });
+    if (this.connected) return this.device;
+    if (this.device) this.clearConnection();
+    if (!this.device) {
+      if (!globalThis.navigator?.bluetooth) throw new Error("Web Bluetooth is unavailable");
+      this.device = await navigator.bluetooth.requestDevice({
+        filters: SERVICE_UUIDS.map((uuid) => ({ services: [uuid] })), optionalServices: SERVICE_UUIDS,
+      });
+      this.device.addEventListener("gattserverdisconnected", this.handleDisconnect);
+    }
     this.server = await this.device.gatt.connect();
     this.service = null;
     for (const uuid of SERVICE_UUIDS) {
@@ -33,21 +48,7 @@ export class WebBluetoothTransport {
     this.notifyCharacteristic = notify;
     this.notificationQueue = [];
     await notify.startNotifications();
-    notify.addEventListener("characteristicvaluechanged", (event) => {
-      const value = event.target.value;
-      const bytes = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
-      const notification = parseNotification(bytes);
-      if (notification) this.dispatchNotification(notification);
-      this.onNotification?.(bytes);
-    });
-    this.device.addEventListener("gattserverdisconnected", () => {
-      this.server = null;
-      this.service = null;
-      this.writeCharacteristic = null;
-      this.dataCharacteristic = null;
-      this.notifyCharacteristic = null;
-      this.rejectNotificationWaiters(new Error("Printer disconnected"));
-    });
+    notify.addEventListener("characteristicvaluechanged", this.handleNotification);
     return this.device;
   }
 
@@ -106,8 +107,8 @@ export class WebBluetoothTransport {
     }
   }
 
-  disconnect() {
-    if (this.device?.gatt?.connected) this.device.gatt.disconnect();
+  clearConnection() {
+    this.notifyCharacteristic?.removeEventListener("characteristicvaluechanged", this.handleNotification);
     this.server = null;
     this.service = null;
     this.writeCharacteristic = null;
@@ -117,7 +118,14 @@ export class WebBluetoothTransport {
     this.rejectNotificationWaiters(new Error("Printer disconnected"));
   }
 
+  disconnect() {
+    if (this.device?.gatt?.connected) this.device.gatt.disconnect();
+    this.clearConnection();
+    this.device?.removeEventListener("gattserverdisconnected", this.handleDisconnect);
+    this.device = null;
+  }
+
   get connected() {
-    return Boolean(this.writeCharacteristic && this.dataCharacteristic);
+    return Boolean(this.device?.gatt?.connected && this.writeCharacteristic && this.dataCharacteristic);
   }
 }

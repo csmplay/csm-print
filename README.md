@@ -21,6 +21,8 @@ await printer.printBitmap({ width, height, data });
 printer.disconnect();
 ```
 
+Calls to `connect()` reuse the active connection. If BLE drops, the in-progress print rejects and is **not retried**; call `connect()` to reconnect the selected device without reopening the chooser, then submit a new print if needed. Calling `disconnect()` explicitly releases the device selection, so the next connection opens the chooser. Print jobs on one `Printer` run in order through completion; jobs queued on the old connection reject rather than running after reconnection.
+
 ```js
 await printer.printElement(element, {
   width: 384,
