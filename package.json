@@ -4,7 +4,7 @@
   "description": "Browser-only library for MXW01 384-dot thermal printers",
   "repository": {
     "type": "git",
-    "url": "https://git.csmpro.ru/csmpro/csm-print"
+    "url": "https://git.csmpro.ru/csm/csm-print"
   },
   "author": "CyberSport Masters <git@csmpro.ru>",
   "license": "GPL-3.0-only",
